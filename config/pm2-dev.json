@@ -1,0 +1,13 @@
+{
+  "apps": [
+    {
+      "name": "app-rpc-consumer-mongodb",
+      "script": "app-rpc-consumer-mongodb.js",
+      "log_date_format": "YYYY-MM-DD HH:mm Z",
+      "error_file": "log/app-rpc-consumer-mongodb.stderr.log",
+      "out_file": "log/app-rpc-consumer-mongodb.stdout.log",
+      "pid_file": "pids/app-rpc-consumer-mongodb.pid",
+      "watch": "app"
+    }
+  ]
+}

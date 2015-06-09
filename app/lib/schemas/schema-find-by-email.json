@@ -1,0 +1,15 @@
+{
+  "title": "Find by Email schema",
+  "type": "object",
+  "required": [
+    "email"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "email": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 320
+    }
+  }
+}

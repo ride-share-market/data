@@ -1,0 +1,30 @@
+{
+  "title": "jsonrpc schema",
+  "type": "object",
+  "required": [
+    "jsonrpc",
+    "method",
+    "params",
+    "id"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "jsonrpc": {
+      "type": "string",
+      "maxLength": 3,
+      "pattern": "^2\\.0$"
+    },
+    "method": {
+      "type": "string",
+      "maxLength": 25
+    },
+    "params": {
+      "type": ["object", "array"]
+    },
+    "id": {
+      "type": "string",
+      "maxLength": 36,
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    }
+  }
+}

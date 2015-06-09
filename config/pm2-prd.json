@@ -1,0 +1,13 @@
+{
+  "apps": [
+    {
+      "name": "app-rpc-consumer-mongodb",
+      "script": "app-rpc-consumer-mongodb.js",
+      "cwd": "/srv/ride-share-market-data",
+      "log_date_format": "YYYY-MM-DD HH:mm Z",
+      "error_file": "/srv/ride-share-market-data/log/app-rpc-consumer-mongodb.stderr.log",
+      "out_file": "/srv/ride-share-market-data/log/app-rpc-consumer-mongodb.stdout.log",
+      "pid_file": "/srv/ride-share-market-data/pids/app-rpc-consumer-mongodb.pid"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "title": "Remove by Id schema",
+  "type": "object",
+  "required": [
+    "id"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 24,
+      "maxLength": 24
+    }
+  }
+}

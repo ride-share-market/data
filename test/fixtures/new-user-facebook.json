@@ -1,0 +1,8 @@
+{
+  "email": "user@signin.com",
+  "provider": "facebook",
+  "profile": {
+    "name": "User SignIn",
+    "gender": "male"
+  }
+}
