@@ -49,7 +49,6 @@
             <arg value="install"/>
             <arg value="-g"/>
             <arg value="gulp"/>
-            <arg value="bower"/>
         </exec>
     </target>
 
