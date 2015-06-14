@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "amqp-rpc-factory": "^0.2.9",
-    "bunyan": "^1.0.1",
+    "bunyan": "^1.3.5",
     "lodash": "^3.9.3",
     "mongoose": "^4.0.4",
     "nconf": "^0.7.1",
@@ -22,7 +22,6 @@
   },
   "devDependencies": {
     "async": "^1.0.0",
-    "bunyan": "^1.3.5",
     "chai": "^2.3.0",
     "gulp": "^3.8.8",
     "gulp-jshint": "^1.11.0",
