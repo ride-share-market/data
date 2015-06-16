@@ -1,6 +1,6 @@
 {
   "name": "ride-share-market-data",
-  "version": "0.0.15",
+  "version": "1.0.0",
   "description": "Node.js RabbitMQ RPC Application.",
   "main": "index.js",
   "private": true,
