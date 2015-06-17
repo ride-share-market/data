@@ -10,7 +10,7 @@ RUN \
     npm cache clean
 
 # Application
-ENV APP_REFRESHED_AT 2015-06-04.1
+ENV APP_REFRESHED_AT 2015-06-17.1
 ENV APP_DIR /srv/ride-share-market-data
 RUN \
     mkdir ${APP_DIR} && \
