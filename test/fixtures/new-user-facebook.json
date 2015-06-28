@@ -1,8 +1,17 @@
 {
-  "email": "user@signin.com",
+  "email": "net@citizen.com",
   "provider": "facebook",
   "profile": {
-    "name": "User SignIn",
-    "gender": "male"
+    "id": "255749783611392",
+    "email": "net@citizen.com",
+    "first_name": "Net",
+    "gender": "male",
+    "last_name": "Citizen",
+    "link": "https://www.facebook.com/app_scoped_user_id/265849783611391/",
+    "locale": "en_US",
+    "name": "Net Citizen",
+    "timezone": 8,
+    "updated_time": "2015-05-03T05:43:38+0000",
+    "verified": false
   }
 }
