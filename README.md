@@ -62,12 +62,14 @@ The defaults and examples assume RabbitMQ and MongoDB are running in a virtual m
 
 ## Install
 
-- `git clone git@github.com:rudijs/ride-share-market-data.git`
-- `npm install`
 - `npm install -g gulp pm2`
+- `cd ride-share-market`
+- `git clone git@github.com:ride-share-market/data.git`
+- `cd data`
+- `npm install`
 - Copy example environment configuration files
 - `gulp init`
-- Update the `env/*.json` files with your RabbitMQ rsm user password.
+- Update the `env/*.json` files where UPDATE is labeled.
 
 ## Dev Tools
 
@@ -84,8 +86,9 @@ The defaults and examples assume RabbitMQ and MongoDB are running in a virtual m
 
 ## Start
 
-- Development Env
-- `pm2 start config/processes.json`
+- Local Developer Environment
+- `pm2 start config/pm2-loc.json`
 
 - Production Env
+
 - TODO
