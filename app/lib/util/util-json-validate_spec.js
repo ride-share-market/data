@@ -1,15 +1,21 @@
 'use strict';
 
-var should = require('chai').should();
+var should = require('chai').should(),
+  fs = require('fs');
 
-var jsonRpcValidator = require('./util-json-validate').jsonRpcValidator,
-  userValidator = require('./util-json-validate').userValidator;
+var config = require('../../../config'),
+  jsonRpcValidator = require('./util-json-validate').jsonRpcValidator,
+  userValidator = require('./util-json-validate').userValidator,
+  formatErrorMessages = require('./util-json-validate').formatErrorMessages;
+
+var newUserFacebookFixture = JSON.stringify(JSON.parse(fs.readFileSync(config.get('root') + '/test/fixtures/new-user-facebook.json').toString())),
+  newUserGoogleFixture = JSON.stringify(JSON.parse(fs.readFileSync(config.get('root') + '/test/fixtures/new-user-google.json').toString()));
 
 describe('Util', function () {
 
-  describe('JSON Validate', function () {
+  describe('JSON Schema Validate', function () {
 
-    describe('JSON-RPC Schema', function () {
+    describe('JSON-RPC', function () {
 
       it('should reject invalid JSON-RPC JSON', function (done) {
 
@@ -40,6 +46,7 @@ describe('Util', function () {
           .then(done, done);
 
       });
+
       it('should accept valid JSON-RPC JSON', function (done) {
 
         var jsonInput = JSON.stringify({
@@ -62,28 +69,42 @@ describe('Util', function () {
       });
     });
 
-    describe('User Schema', function () {
-      it('should accept valid User JSON', function (done) {
+    describe('User', function () {
 
-        var jsonInput = JSON.stringify({
-          email: 'net@citizen.com',
-          provider: 'google',
-          profile: {
-            name: 'Net Citizen',
-            gender: 'male'
-          }
-        });
+      it('should accept valid Facebook user JSON', function (done) {
 
-        userValidator(jsonInput)
-          .then(function success(res) {
-            res.should.equal(jsonInput);
-          }, function error(err) {
-            should.not.exist(err);
+        userValidator(newUserFacebookFixture).then(function (res) {
+            res.should.equal(newUserFacebookFixture);
           })
           .then(done, done);
 
       });
+
+      it('should accept valid Google user JSON', function (done) {
+
+        userValidator(newUserGoogleFixture).then(function (res) {
+          res.should.equal(newUserGoogleFixture);
+        })
+          .then(done, done);
+
+      });
+
     });
+
+    describe('Format error messages', function() {
+
+      it('should remove "#!" from the path property', function(done) {
+        userValidator('{}').catch(function (err) {
+          var errors = JSON.parse(err);
+          errors.jsonSchemaErrors[0].path.should.equal('#/');
+
+          var formattedErrors = formatErrorMessages(errors);
+          formattedErrors[0].path.should.equal('');
+        })
+          .then(done, done);
+      });
+
+    })
 
   });
 

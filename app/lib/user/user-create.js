@@ -3,17 +3,26 @@
 var assert = require('assert'),
   q = require('q');
 
-module.exports = function create(logger, mongoose, user) {
+var config = require('../../../config'),
+  userValidator = require(config.get('root') + '/app/lib/util/util-json-validate').userValidator;
 
-  assert.equal(typeof (logger), 'object', 'argument \'logger\' must be an object');
-  assert.equal(typeof (mongoose), 'object', 'argument \'mongoose\' must be an object');
-  assert.equal(typeof (user), 'object', 'argument \'user\' must be an object');
+module.exports = function createValidUser(logger, mongoose, user) {
+  return validateUser(user).then(function() {
+    return createUser(logger, mongoose, user);
+  })
+};
 
-  //throw new Error('User Create Exploded!');
+function validateUser(user) {
+  return userValidator(JSON.stringify(user));
+}
+
+function createUser(logger, mongoose, user) {
+
+  assert.equal(typeof (logger), 'object', 'argument LOGGER must be an object');
+  assert.equal(typeof (mongoose), 'object', 'argument MONGOOSE must be an object');
+  assert.equal(typeof (user), 'object', 'argument USER must be an object');
 
   var deferred = q.defer();
-
-  // TODO: zschema validation
 
   var User = mongoose.model('User');
 
@@ -42,7 +51,10 @@ module.exports = function create(logger, mongoose, user) {
       }
       else {
 
-        // TODO: Handle Model validation errors
+        // TODO: Handle Mongoose model validation errors
+        // Apart from duplicate email error above, pretty much all else should
+        // be validated by z-schema in the call to userValidator prior to this function
+
         deferred.reject({
           code: 500,
           message: 'internal_server_error',
@@ -57,4 +69,4 @@ module.exports = function create(logger, mongoose, user) {
 
   return deferred.promise;
 
-};
+}

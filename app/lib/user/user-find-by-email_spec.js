@@ -1,7 +1,8 @@
 'use strict';
 
 var should = require('chai').should(),
-  sinon = require('sinon');
+  sinon = require('sinon'),
+  fs = require('fs');
 
 var config = require('../../../config'),
   mongodb = require(config.get('root') + '/config/mongodb'),
@@ -19,6 +20,8 @@ var logger,
       name: 'Net Citizen'
     }
   };
+
+user = JSON.parse(fs.readFileSync(config.get('root') + '/test/fixtures/new-user-google.json').toString());
 
 // Connect to database if not already connected from other tests
 if (mongoose.connection.readyState === 0) {
@@ -50,12 +53,11 @@ describe('User', function () {
     // Add test users
     beforeEach(function (done) {
 
-      createUser(logger, mongoose, user)
-        .then(function createUserSuccess(res) {
+      createUser(logger, mongoose, user).then(function createUserSuccess(res) {
           should.exist(res._id);
           user._id = res._id;
-          done();
-        }, console.error);
+        })
+        .then(done, done);
 
     });
 
@@ -68,7 +70,7 @@ describe('User', function () {
 
     it('should find a user by email', function (done) {
 
-      findUserByEmail(logger, mongoose, user.email).then(function findUserByEmailSuccess(res) {
+      findUserByEmail(logger, mongoose, user.email).then(function (res) {
         res.should.be.instanceof(Array);
         res[0].email.should.eql(user.email);
       })

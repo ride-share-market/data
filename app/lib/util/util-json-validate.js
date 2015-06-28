@@ -34,6 +34,7 @@ function jsonValidation(schema) {
 
     // TODO: try/catch JSON.parse
     validator.validate(JSON.parse(json), schema);
+
     var errors = validator.getLastErrors();
 
     if (!errors) {
@@ -52,7 +53,7 @@ function jsonValidation(schema) {
 }
 
 /**
- * Formats/strips out chars/cleans up JSON zschema error message
+ * Formats/strips out chars/cleans up JSON z-schema error message
  *
  * @param errors
  * @returns {*}
@@ -70,9 +71,9 @@ function formatErrorMessages(errors) {
 }
 
 module.exports = {
+  formatErrorMessages: formatErrorMessages,
   findByEmailValidator: jsonValidation(schemas.findByEmail),
   findByIdValidator: jsonValidation(schemas.findById),
-  formatErrorMessages: formatErrorMessages,
   jsonRpcValidator: jsonValidation(schemas.jsonRpc),
   removeByIdValidator: jsonValidation(schemas.removeById),
   userValidator: jsonValidation(schemas.user)

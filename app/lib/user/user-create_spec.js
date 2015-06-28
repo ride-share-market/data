@@ -2,7 +2,8 @@
 
 var should = require('chai').should(),
   sinon = require('sinon'),
-  _ = require('lodash');
+  _ = require('lodash'),
+  fs = require('fs');
 
 var config = require('../../../config'),
   mongodb = require(config.get('root') + '/config/mongodb'),
@@ -17,14 +18,7 @@ if(mongoose.connection.readyState === 0) {
 }
 
 var logger,
-  newUser = {
-  email: 'user@create.com',
-  provider: 'google',
-  profile: {
-    name: 'User Create',
-    gender: 'male'
-  }
-};
+  newUser = JSON.parse(fs.readFileSync(config.get('root') + '/test/fixtures/new-user-google.json').toString());
 
 describe('User', function () {
 
@@ -116,7 +110,16 @@ describe('User', function () {
 
     });
 
+    it('should reject non valid user objects', function(done) {
+      userCreate(logger, mongoose, {}).catch(function(err) {
+        var errors = JSON.parse(err);
+        should.exist(errors.jsonSchemaErrors[0].path);
+        errors.jsonSchemaErrors[0].message.should.match(/missing\ required\ property/i);
+      })
+        .then(done, done);
+    });
+
   });
 
-
 });
+
