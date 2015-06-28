@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
   path = require('path');
 
 var config = require('./.'),
-  log = require(config.get('root') + '/app/lib/log'),
+  log = require(config.get('root') + '/config/log'),
   logger = log.create(path.basename(__filename, '.js'));
 
 // Build the connection string

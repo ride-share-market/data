@@ -1,5 +1,4 @@
 {
-
   "messageQueue": {
     "rabbitmq": {
       "user": "rsm",
@@ -11,7 +10,6 @@
       "rpc": "rsm_rpc_queue"
     }
   },
-
   "database": {
     "mongodb": {
       "uri": "mongodb://192.168.33.10",
@@ -19,5 +17,4 @@
       "dbname": "rsm-dev"
     }
   }
-
 }

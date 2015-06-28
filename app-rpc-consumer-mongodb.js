@@ -3,7 +3,7 @@
 var path = require('path');
 
 var config = require('./config'),
-  log = require(config.get('root') + '/app/lib/log'),
+  log = require(config.get('root') + '/config/log'),
   logger = log.create(path.basename(__filename, '.js')),
   mongoose = require(config.get('root') + '/config/mongodb');
 
