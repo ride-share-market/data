@@ -1,7 +1,9 @@
 'use strict';
 
 var should = require('chai').should(),
-  sinon = require('sinon');
+  sinon = require('sinon'),
+  fs = require('fs'),
+  _ = require('lodash');
 
 var config = require('../../../config'),
   mongodb = require(config.get('root') + '/config/mongodb'),
@@ -12,21 +14,9 @@ var config = require('../../../config'),
   createRideshare = require('./rideshare-create');
 
 var logger,
-  user = {
-    email: 'user@rideshare-update.com',
-    provider: 'google',
-    profile: {
-      name: 'Update Rideshare',
-      gender: 'male'
-    }
-  },
-  rideshare = {
-    user: null,
-    itinerary: {
-      from: 'Here',
-      to: 'There'
-    }
-  };
+  newUser = JSON.parse(fs.readFileSync(config.get('root') + '/test/fixtures/new-user-google.json').toString()),
+  newRideshare1 = JSON.parse(fs.readFileSync(config.get('root') + '/test/fixtures/http_post_200_rideshare_1.json').toString()),
+  newRideshare1Id;
 
 var updateRideshare = require('./rideshare-update');
 
@@ -59,24 +49,21 @@ describe('Rideshare', function () {
 
     // Add a test user
     beforeEach(function (done) {
-
-      createUser(logger, mongoose, user)
+      createUser(logger, mongoose, newUser)
         .then(function createUserSuccess(res) {
           should.exist(res._id);
-          rideshare.user = res._id;
-          done();
-        }, console.error);
-
+          newRideshare1.user = res._id;
+        })
+        .then(done, done);
     });
 
     // Add a test rideshare
     beforeEach(function (done) {
-
-      createRideshare(logger, mongoose, rideshare)
+      createRideshare(logger, mongoose, newRideshare1)
         .then(function createRideshareSuccess(res) {
           should.exist(res._id);
-          res.user.should.equal(rideshare.user);
-          rideshare._id = res._id;
+          res.user.should.equal(newRideshare1.user);
+          newRideshare1Id = res._id;
         })
         .then(done, done);
 
@@ -91,12 +78,13 @@ describe('Rideshare', function () {
 
     it('should update a rideshare', function (done) {
 
-      rideshare.itinerary.to.should.equal('There');
-      rideshare.itinerary.to = 'Work';
+      var rideshare = _.clone(newRideshare1, true);
+      rideshare._id = newRideshare1Id;
+      rideshare.itinerary.type.should.equal('Wanted');
+      rideshare.itinerary.type = 'Offering';
 
-      updateRideshare(logger, mongoose, rideshare).then(function updateRideshareSuccess(res) {
-        res._id.should.eql(rideshare._id);
-        res.itinerary.to.should.equal('Work');
+      updateRideshare(logger, mongoose, rideshare).then(function (res) {
+        res.itinerary.type.should.equal('Offering');
       })
         .then(done, done);
 
@@ -110,7 +98,10 @@ describe('Rideshare', function () {
 
       sinon.stub(Rideshare, 'findByIdAndUpdate', stubFindByIdAndUpdate);
 
-      updateRideshare(logger, mongoose, rideshare).catch(function updateRideshareError(err) {
+      var rideshare = _.clone(newRideshare1, true);
+      rideshare._id = newRideshare1Id;
+
+      updateRideshare(logger, mongoose, rideshare).catch(function (err) {
         err.code.should.equal(500);
         err.message.should.equal('internal_server_error');
         err.data.should.equal('Internal Server Error.');

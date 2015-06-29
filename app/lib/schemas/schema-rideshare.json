@@ -1,0 +1,109 @@
+[
+  {
+    "id": "itineraryDetails",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "route",
+      "smoking",
+      "shareDriving",
+      "luggage",
+      "seats",
+      "vehicle",
+      "frequency",
+      "trip",
+      "type",
+      "comment",
+      "cost",
+      "currency"
+    ],
+    "properties": {
+      "route": {
+        "type": "array",
+        "minItems": 2
+      },
+      "smoking": {
+        "type": "string"
+      },
+      "shareDriving": {
+        "type": "string"
+      },
+      "luggage": {
+        "type": "string"
+      },
+      "seats": {
+        "type": "number"
+      },
+      "vehicle": {
+        "type": "string"
+      },
+      "frequency": {
+        "type": "string"
+      },
+      "trip": {
+        "type": "string"
+      },
+      "type": {
+        "type": "string"
+      },
+      "currency": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1
+      },
+      "cost": {
+        "type": "number"
+      },
+      "comment": {
+        "type": "string",
+        "maxLength": 250
+      }
+    }
+  },
+  {
+    "id": "_idDetails",
+    "type": "string",
+    "pattern": "^[0-9a-fA-F]{24}$"
+  },
+  {
+    "id": "userDetails",
+    "type": "string",
+    "pattern": "^[0-9a-fA-F]{24}$"
+  },
+  {
+    "id": "new",
+    "description": "A new rideshare object that will be stored in the database",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "itinerary",
+      "user"
+    ],
+    "properties": {
+      "itinerary": {
+        "$ref": "itineraryDetails"
+      },
+      "user": {
+        "$ref": "userDetails"
+      }
+    }
+  },
+  {
+    "id": "update",
+    "description": "An existing rideshare object that will be updated into the database",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "_id",
+      "itinerary"
+    ],
+    "properties": {
+      "itinerary": {
+        "$ref": "itineraryDetails"
+      },
+      "_id": {
+        "$ref": "_idDetails"
+      }
+    }
+  }
+]

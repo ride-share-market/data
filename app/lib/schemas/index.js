@@ -12,5 +12,6 @@ module.exports = {
   findById: parseJson('schema-find-by-id.json'),
   jsonRpc: parseJson('schema-json-rpc.json'),
   removeById: parseJson('schema-remove-by-id.json'),
-  user: parseJson('schema-user.json')
+  user: parseJson('schema-user.json'),
+  rideshare: parseJson('schema-rideshare.json')
 };

@@ -9,11 +9,11 @@ var config = require('../../../config'),
 module.exports = function createValidUser(logger, mongoose, user) {
   return validateUser(user).then(function() {
     return createUser(logger, mongoose, user);
-  })
+  });
 };
 
 function validateUser(user) {
-  return userValidator(JSON.stringify(user));
+  return userValidator(JSON.stringify(user), 'new');
 }
 
 function createUser(logger, mongoose, user) {

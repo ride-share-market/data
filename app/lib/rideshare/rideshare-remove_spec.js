@@ -1,7 +1,8 @@
 'use strict';
 
 var should = require('chai').should(),
-  sinon = require('sinon');
+  sinon = require('sinon'),
+  fs = require('fs');
 
 var config = require('../../../config'),
   mongodb = require(config.get('root') + '/config/mongodb'),
@@ -13,21 +14,9 @@ var config = require('../../../config'),
   deleteRideshare = require('./rideshare-remove');
 
 var logger,
-  user = {
-    email: 'user@rideshare-create.com',
-    provider: 'google',
-    profile: {
-      name: 'Create Rideshare',
-      gender: 'male'
-    }
-  },
-  rideshare = {
-    user: null,
-    itinerary: {
-      from: 'Here',
-      to: 'There'
-    }
-  };
+  newUser = JSON.parse(fs.readFileSync(config.get('root') + '/test/fixtures/new-user-google.json').toString()),
+  newRideshare1 = JSON.parse(fs.readFileSync(config.get('root') + '/test/fixtures/http_post_200_rideshare_1.json').toString()),
+  newRideshare1Id;
 
 // Connect to database if not already connected from other tests
 if (mongoose.connection.readyState === 0) {
@@ -36,7 +25,7 @@ if (mongoose.connection.readyState === 0) {
 
 describe('Rideshare', function () {
 
-  describe('Delete', function () {
+  describe('Remove', function () {
 
     // Before each test make sure the database readyState is 1 (connected)
     beforeEach(function (done) {
@@ -58,25 +47,20 @@ describe('Rideshare', function () {
 
     // Add a test user
     beforeEach(function (done) {
-
-      createUser(logger, mongoose, user)
-        .then(function createUserSuccess(res) {
-          should.exist(res._id);
-          rideshare.user = res._id;
-          done();
-        }, console.error);
-
+      createUser(logger, mongoose, newUser).then(function (res) {
+        should.exist(res._id);
+        newRideshare1.user = res._id;
+      })
+        .then(done, done);
     });
 
     // Add a test rideshare
     beforeEach(function (done) {
-
-      createRideshare(logger, mongoose, rideshare)
-        .then(function createRideshareSuccess(res) {
-          should.exist(res._id);
-          res.user.should.equal(rideshare.user);
-          rideshare._id = res._id;
-        })
+      createRideshare(logger, mongoose, newRideshare1).then(function (res) {
+        should.exist(res._id);
+        res.user.should.equal(newRideshare1.user);
+        newRideshare1Id = res._id;
+      })
         .then(done, done);
 
     });
@@ -92,9 +76,8 @@ describe('Rideshare', function () {
 
       it('should remove a Rideshare', function (done) {
 
-        deleteRideshare(logger, mongoose, {id: rideshare._id})
-          .then(function deleteRideshareSuccess(res) {
-            res._id.should.eql(rideshare._id);
+        deleteRideshare(logger, mongoose, {id: newRideshare1Id}).then(function (res) {
+            res._id.should.eql(newRideshare1Id);
           })
           .then(done, done);
 
@@ -103,13 +86,13 @@ describe('Rideshare', function () {
       it('should return 404 for unknown Rideshare', function (done) {
 
         deleteRideshare(logger, mongoose, {id: '546b76317c5ae961209cd544'}).catch(function deleteRideshareError(err) {
-            // test logging was done
-            sinon.assert.calledOnce(logger.error);
+          // test logging was done
+          sinon.assert.calledOnce(logger.error);
 
-            err.code.should.equal(404);
-            err.message.should.equal('not_found');
-            err.data.should.equal('Rideshare not found.');
-          })
+          err.code.should.equal(404);
+          err.message.should.equal('not_found');
+          err.data.should.equal('Rideshare not found.');
+        })
           .then(done, done);
 
       });
@@ -122,8 +105,7 @@ describe('Rideshare', function () {
 
         sinon.stub(Rideshare, 'findByIdAndRemove', stubFindByIdAndRemove);
 
-        deleteRideshare(logger, mongoose, {id: rideshare._id})
-          .catch(function deleteRideshareError(err) {
+        deleteRideshare(logger, mongoose, {id: newRideshare1Id}).catch(function (err) {
 
             // test logging was done
             sinon.assert.calledOnce(logger.error);
@@ -142,12 +124,11 @@ describe('Rideshare', function () {
 
       it('should reject invalid RPC input', function (done) {
 
-        deleteRideshare(logger, mongoose, {id: 'abc123'})
-          .catch(function deleteRideshareError(err) {
+        deleteRideshare(logger, mongoose, {id: 'abc123'}).catch(function (err) {
             err.code.should.equal(400);
             err.message.should.equal('validation_error');
             err.data[0].path.should.equal('id');
-            err.data[0].message.should.equal('String is too short (6 chars), minimum 24');
+            err.data[0].message.should.match(/String\ does\ not\ match\ pattern/);
           })
           .then(done, done);
 

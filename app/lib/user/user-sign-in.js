@@ -27,7 +27,7 @@ module.exports = function signIn(logger, mongoose, user) {
   /**
    * Validate the JSON with zSchema then proceed with request
    */
-  userValidator(JSON.stringify(user)).then(function userValidatorSuccess() {
+  userValidator(JSON.stringify(user), 'new').then(function userValidatorSuccess() {
       return findUserByEmail(logger, mongoose, user.email);
     },
     function userValidatorError(err) {

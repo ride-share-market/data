@@ -6,10 +6,9 @@ var assert = require('assert'),
 var config = require('../../../config'),
   validator = require(config.get('root') + '/app/lib/util/util-json-validate');
 
-
 function validateRpcParams(rpcParams) {
 
-  return validator.removeByIdValidator(JSON.stringify(rpcParams)).then(
+  return validator.removeByIdValidator(JSON.stringify(rpcParams), 'removeById').then(
     function validatorSuccess() {
       return q.resolve();
     },

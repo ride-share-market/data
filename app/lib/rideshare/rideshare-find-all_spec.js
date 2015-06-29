@@ -1,7 +1,8 @@
 'use strict';
 
 var should = require('chai').should(),
-  sinon = require('sinon');
+  sinon = require('sinon'),
+  fs = require('fs');
 
 var config = require('../../../config'),
   mongodb = require(config.get('root') + '/config/mongodb'),
@@ -13,27 +14,9 @@ var config = require('../../../config'),
   Rideshare = mongoose.model('Rideshare');
 
 var logger,
-  user = {
-    email: 'user@rideshare-find-all.com',
-    provider: 'google',
-    profile: {
-      name: 'Find All Rideshares'
-    }
-  },
-  rideshare1 = {
-    user: null,
-    itinerary: {
-      from: 'Here',
-      to: 'There'
-    }
-  },
-  rideshare2 = {
-    user: null,
-    itinerary: {
-      from: 'Home',
-      to: 'Work'
-    }
-  };
+  newUser = JSON.parse(fs.readFileSync(config.get('root') + '/test/fixtures/new-user-google.json').toString()),
+  newRideshare1 = JSON.parse(fs.readFileSync(config.get('root') + '/test/fixtures/http_post_200_rideshare_1.json').toString()),
+  newRideshare2 = JSON.parse(fs.readFileSync(config.get('root') + '/test/fixtures/http_post_200_rideshare_2.json').toString());
 
 // Connect to database if not already connected from other tests
 if (mongoose.connection.readyState === 0) {
@@ -74,30 +57,26 @@ describe('Rideshare', function () {
       // Add a test user
       beforeEach(function (done) {
 
-        createUser(logger, mongoose, user)
-          .then(function createUserSuccess(res) {
-            should.exist(res._id);
-            rideshare1.user = res._id;
-            rideshare2.user = res._id;
-            done();
-          }, console.error);
+        createUser(logger, mongoose, newUser).then(function (res) {
+          should.exist(res._id);
+          newRideshare1.user = res._id;
+          newRideshare2.user = res._id;
+        })
+          .then(done, done);
 
       });
 
       // Add a test rideshares
       beforeEach(function (done) {
 
-        createRideshare(logger, mongoose, rideshare1)
-          .then(function createRideshareSuccess(res) {
+        createRideshare(logger, mongoose, newRideshare1).then(function (res) {
             should.exist(res._id);
-            res.user.should.equal(rideshare1.user);
-            rideshare1._id = res._id;
-            return createRideshare(logger, mongoose, rideshare2);
+            res.user.should.equal(newRideshare1.user);
+            return createRideshare(logger, mongoose, newRideshare2);
           })
-          .then(function createRideshareSuccess(res) {
+          .then(function (res) {
             should.exist(res._id);
-            res.user.should.equal(rideshare2.user);
-            rideshare2._id = res._id;
+            res.user.should.equal(newRideshare2.user);
           })
           .then(done, done);
 
@@ -105,12 +84,11 @@ describe('Rideshare', function () {
 
       it('should return a ASC sorted array of Rideshares', function (done) {
 
-        findAllRideshares(logger, mongoose)
-          .then(function findRideshareAllSuccess(res) {
+        findAllRideshares(logger, mongoose).then(function (res) {
             res.should.be.instanceof(Array);
             res.length.should.equal(2);
             // test the first rideshare in the array is the 2nd rideshare created - ie. sorted newest to oldest
-            res[0].itinerary.from.should.equal('Home');
+            res[0].itinerary.route[0].place.should.equal(newRideshare2.itinerary.route[0].place);
           })
           .then(done, done);
 
@@ -120,7 +98,7 @@ describe('Rideshare', function () {
 
     describe('No Results', function () {
 
-      it('should return no results found', function(done) {
+      it('should return no results found', function (done) {
 
         findAllRideshares(logger, mongoose)
           .catch(function findAllRidesharesError(err) {
@@ -136,9 +114,9 @@ describe('Rideshare', function () {
 
         var stubFind = function () {
           return {
-            populate: function() {
+            populate: function () {
               return {
-                exec: function(callback) {
+                exec: function (callback) {
                   callback(new Error('Stubbed find()'));
                 }
               };
