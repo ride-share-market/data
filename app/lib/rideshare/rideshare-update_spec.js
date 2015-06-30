@@ -16,7 +16,7 @@ var config = require('../../../config'),
 var logger,
   newUser = JSON.parse(fs.readFileSync(config.get('root') + '/test/fixtures/new-user-google.json').toString()),
   newRideshare1 = JSON.parse(fs.readFileSync(config.get('root') + '/test/fixtures/http_post_200_rideshare_1.json').toString()),
-  newRideshare1Id;
+  newRideshare1Updated;
 
 var updateRideshare = require('./rideshare-update');
 
@@ -63,7 +63,12 @@ describe('Rideshare', function () {
         .then(function createRideshareSuccess(res) {
           should.exist(res._id);
           res.user.should.equal(newRideshare1.user);
-          newRideshare1Id = res._id;
+
+          newRideshare1Updated = {
+            _id: res._id,
+            itinerary: newRideshare1.itinerary
+          };
+
         })
         .then(done, done);
 
@@ -78,19 +83,43 @@ describe('Rideshare', function () {
 
     it('should update a rideshare', function (done) {
 
-      var rideshare = _.clone(newRideshare1, true);
-      rideshare._id = newRideshare1Id;
-      rideshare.itinerary.type.should.equal('Wanted');
-      rideshare.itinerary.type = 'Offering';
+      newRideshare1Updated.itinerary.type.should.equal('Wanted');
+      newRideshare1Updated.itinerary.type = 'Offering';
 
-      updateRideshare(logger, mongoose, rideshare).then(function (res) {
+      updateRideshare(logger, mongoose, newRideshare1Updated).then(function (res) {
         res.itinerary.type.should.equal('Offering');
       })
         .then(done, done);
 
     });
 
-    it('should handle errors', function (done) {
+    it('should reject updated rideshare additional properties', function(done) {
+
+      newRideshare1Updated.color = 'blue';
+
+      updateRideshare(logger, mongoose, newRideshare1Updated).catch(function (err) {
+        err.code.should.equal(400);
+        err.message.should.equal('validation_error');
+        err.data[0].message.should.equal('Additional properties not allowed: color');
+      })
+        .then(done, done);
+
+    });
+
+    it('should reject updated rideshare missing required properties', function(done) {
+
+      delete newRideshare1Updated._id;
+
+      updateRideshare(logger, mongoose, newRideshare1Updated).catch(function (err) {
+        err.code.should.equal(400);
+        err.message.should.equal('validation_error');
+        err.data[0].message.should.equal('Missing required property: _id');
+      })
+        .then(done, done);
+
+    });
+
+    it('should handle database errors', function (done) {
 
       var stubFindByIdAndUpdate = function (id, rideshare, options, callback) {
         callback(new Error('Stubbed findByIdAndUpdate()'));
@@ -98,10 +127,7 @@ describe('Rideshare', function () {
 
       sinon.stub(Rideshare, 'findByIdAndUpdate', stubFindByIdAndUpdate);
 
-      var rideshare = _.clone(newRideshare1, true);
-      rideshare._id = newRideshare1Id;
-
-      updateRideshare(logger, mongoose, rideshare).catch(function (err) {
+      updateRideshare(logger, mongoose, newRideshare1Updated).catch(function (err) {
         err.code.should.equal(500);
         err.message.should.equal('internal_server_error');
         err.data.should.equal('Internal Server Error.');
