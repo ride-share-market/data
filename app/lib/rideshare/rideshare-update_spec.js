@@ -2,8 +2,7 @@
 
 var should = require('chai').should(),
   sinon = require('sinon'),
-  fs = require('fs'),
-  _ = require('lodash');
+  fs = require('fs');
 
 var config = require('../../../config'),
   mongodb = require(config.get('root') + '/config/mongodb'),

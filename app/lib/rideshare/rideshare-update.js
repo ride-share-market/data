@@ -9,7 +9,7 @@ var config = require('../../../config'),
 module.exports = function update(logger, mongoose, rideshare) {
   return validateUpdateRideshare(rideshare).then(function () {
     return updateRideshare(logger, mongoose, rideshare);
-  })
+  });
 };
 
 function validateUpdateRideshare(rideshare) {

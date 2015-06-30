@@ -59,13 +59,11 @@ var processJsonRpc = function (jsonRpcString) {
     rpcMethodTable[jsonRpc.method](logger, mongoose, jsonRpc.params)
       .then(
       function jsonRpcSuccess(result) {
-        console.log('result', result);
         deferred.resolve(setJsonRpcResponse({
           result: result
         }));
       },
       function jsonRpcError(err) {
-        console.log('errz', err);
         deferred.reject(setJsonRpcResponse({
           error: {
             code: err.code,
