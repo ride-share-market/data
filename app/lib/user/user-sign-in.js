@@ -31,7 +31,7 @@ module.exports = function signIn(logger, mongoose, user) {
       return findUserByEmail(logger, mongoose, user.email);
     },
     function userValidatorError(err) {
-      return q.reject({code: 400, message: JSON.parse(err)});
+      return q.reject(err);
     })
     .then(
     function findUserByEmailSuccess(res) {

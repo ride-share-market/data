@@ -77,8 +77,8 @@ describe('Rideshare', function () {
       it('should remove a Rideshare', function (done) {
 
         deleteRideshare(logger, mongoose, {id: newRideshare1Id}).then(function (res) {
-            res._id.should.eql(newRideshare1Id);
-          })
+          res._id.should.eql(newRideshare1Id);
+        })
           .then(done, done);
 
       });
@@ -107,13 +107,13 @@ describe('Rideshare', function () {
 
         deleteRideshare(logger, mongoose, {id: newRideshare1Id}).catch(function (err) {
 
-            // test logging was done
-            sinon.assert.calledOnce(logger.error);
+          // test logging was done
+          sinon.assert.calledOnce(logger.error);
 
-            err.code.should.equal(500);
-            err.message.should.equal('internal_server_error');
-            err.data.should.equal('Internal Server Error.');
-          })
+          err.code.should.equal(500);
+          err.message.should.equal('internal_server_error');
+          err.data.should.equal('Internal Server Error.');
+        })
           .then(done, done);
 
       });
@@ -125,11 +125,11 @@ describe('Rideshare', function () {
       it('should reject invalid RPC input', function (done) {
 
         deleteRideshare(logger, mongoose, {id: 'abc123'}).catch(function (err) {
-            err.code.should.equal(400);
-            err.message.should.equal('validation_error');
-            err.data[0].path.should.equal('id');
-            err.data[0].message.should.match(/String\ does\ not\ match\ pattern/);
-          })
+          err.code.should.equal(400);
+          err.message.should.equal('validation_error');
+          err.data[0].path.should.equal('id');
+          err.data[0].message.should.match(/String\ does\ not\ match\ pattern/);
+        })
           .then(done, done);
 
       });

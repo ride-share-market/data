@@ -1,8 +1,7 @@
 'use strict';
 
 var assert = require('assert'),
-  q = require('q'),
-  _ = require('lodash');
+  q = require('q');
 
 var config = require('../../../config'),
   rideshareValidator = require(config.get('root') + '/app/lib/util/util-json-validate').rideshareValidator;
@@ -34,29 +33,36 @@ function createNewRideshare(logger, mongoose, rideshare) {
 
       logger.error(err);
 
+      deferred.reject({
+        code: 500,
+        message: 'internal_server_error',
+        data: 'Internal Server Error.'
+      });
+
+      // Disable Mongoose validation errors for now, z-schema is doing all of them.
       // Model validation errors
-      if (err.name && err.name === 'ValidationError') {
-
-        deferred.reject({
-          code: 400,
-          message: 'validation_error',
-          data: _.keys(err.errors).map(function (error) {
-            return {
-              name: err.errors[error].name,
-              path: err.errors[error].path,
-              type: err.errors[error].type
-            };
-          })
-        });
-
-      }
-      else {
-        deferred.reject({
-          code: 500,
-          message: 'internal_server_error',
-          data: 'Internal Server Error.'
-        });
-      }
+      //if (err.name && err.name === 'ValidationError') {
+      //
+      //  deferred.reject({
+      //    code: 400,
+      //    message: 'validation_error',
+      //    data: _.keys(err.errors).map(function (error) {
+      //      return {
+      //        name: err.errors[error].name,
+      //        path: err.errors[error].path,
+      //        type: err.errors[error].type
+      //      };
+      //    })
+      //  });
+      //
+      //}
+      //else {
+      //  deferred.reject({
+      //    code: 500,
+      //    message: 'internal_server_error',
+      //    data: 'Internal Server Error.'
+      //  });
+      //}
 
     }
     else {

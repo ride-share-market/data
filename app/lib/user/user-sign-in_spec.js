@@ -54,11 +54,11 @@ describe('User', function () {
 
       it('should reject a non valid user JSON schema', function (done) {
 
-        userSignIn(logger, mongoose, {})
-          .catch(function (err) {
-            err.code.should.equal(400);
-            should.exist(err.message.jsonSchemaErrors);
-          })
+        userSignIn(logger, mongoose, {}).catch(function (err) {
+          err.code.should.equal(400);
+          err.message.should.equal('validation_error');
+          err.data[0].message.should.match(/missing required property/i);
+        })
           .then(done, done);
 
       });

@@ -25,6 +25,8 @@ var setJsonRpcResponse = function setJsonRpcResponse(id) {
    */
   return function jsonRpcResponseAssign(obj) {
 
+    console.log('obj', obj);
+
     assert.equal(typeof (obj), 'object', 'argument \'obj\' must be an object');
 
     if(!obj.result && !obj.error) {

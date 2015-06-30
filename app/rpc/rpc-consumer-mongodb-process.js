@@ -45,9 +45,7 @@ var setLogger = function setLogger(log) {
  */
 var processJsonRpc = function (jsonRpcString) {
 
-  //throw new Error('Oops! Something exploded!');
-
-  assert.equal(typeof (jsonRpcString), 'string', 'argument \'jsonRpcString\' must be a string');
+  assert.equal(typeof (jsonRpcString), 'string', 'argument jsonRpcString must be a string');
 
   // TODO: try/catch
   var jsonRpc = JSON.parse(jsonRpcString);
@@ -61,11 +59,13 @@ var processJsonRpc = function (jsonRpcString) {
     rpcMethodTable[jsonRpc.method](logger, mongoose, jsonRpc.params)
       .then(
       function jsonRpcSuccess(result) {
+        console.log('result', result);
         deferred.resolve(setJsonRpcResponse({
           result: result
         }));
       },
       function jsonRpcError(err) {
+        console.log('errz', err);
         deferred.reject(setJsonRpcResponse({
           error: {
             code: err.code,
@@ -111,7 +111,7 @@ exports.jsonRpc = function jsonRpc(msg) {
 
   var deferred = q.defer();
 
-  jsonRpcValidator(msg.content.toString())
+  jsonRpcValidator(msg.content.toString(), 'jsonRpc')
     .then(processJsonRpc)
     .then(function processJsonRpcSuccess(res) {
       deferred.resolve(res);

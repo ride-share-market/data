@@ -13,11 +13,7 @@ function validateRpcParams(rpcParams) {
       return q.resolve();
     },
     function validatorError(err) {
-      return q.reject({
-        code: 400,
-        message: 'validation_error',
-        data: validator.formatErrorMessages(JSON.parse(err))
-      });
+      return q.reject(err);
     }
   );
 

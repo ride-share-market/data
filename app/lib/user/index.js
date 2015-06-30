@@ -18,25 +18,6 @@ function validateFindByArguments(logger, mongoose, rpcParams) {
   assert.equal(typeof (rpcParams), 'object', 'argument rpcParams must be an object');
 }
 
-/**
- * Formats/strips out chars/cleans up JSON zschema error message
- *
- * @param errors
- * @returns {*}
- */
-function formatErrorMessages(errors) {
-
-  // errors must be an array
-
-  return errors.jsonSchemaErrors.map(function(error) {
-    return {
-      path: error.path.replace('#/', ''),
-      message: error.message
-    };
-  });
-
-}
-
 exports.findByEmail = function (logger, mongoose, rpcParams) {
 
   validateFindByArguments(logger, mongoose, rpcParams);
@@ -46,11 +27,7 @@ exports.findByEmail = function (logger, mongoose, rpcParams) {
       return findByEmail(logger, mongoose, rpcParams.email);
     },
     function validatorError(err) {
-      return q.reject({
-        code: 400,
-        message: 'validation_error',
-        data: formatErrorMessages(JSON.parse(err))
-      });
+      return q.reject(err);
     }
   );
 
@@ -65,11 +42,7 @@ exports.findById = function (logger, mongoose, rpcParams) {
       return findById(logger, mongoose, rpcParams.id);
     },
     function validatorError(err) {
-      return q.reject({
-        code: 400,
-        message: 'validation_error',
-        data: formatErrorMessages(JSON.parse(err))
-      });
+      return q.reject(err);
     }
   );
 

@@ -43,7 +43,7 @@ describe('Rideshare', function () {
       done();
     });
 
-    describe('Find By ID', function () {
+    describe('By ID', function () {
 
       it('should reject non valid ID format', function (done) {
 
@@ -51,7 +51,7 @@ describe('Rideshare', function () {
           err.code.should.equal(400);
           err.message.should.equal('validation_error');
           err.data[0].path.should.equal('id');
-          err.data[0].message.should.equal('String is too short (6 chars), minimum 24');
+          err.data[0].message.should.match(/String does not match pattern/);
         })
           .then(done, done);
 
@@ -70,7 +70,7 @@ describe('Rideshare', function () {
 
     });
 
-    describe('Find By User ID', function () {
+    describe('By User ID', function () {
 
       it('should reject non valid ID format', function (done) {
 
@@ -78,7 +78,7 @@ describe('Rideshare', function () {
           err.code.should.equal(400);
           err.message.should.equal('validation_error');
           err.data[0].path.should.equal('id');
-          err.data[0].message.should.equal('String is too short (6 chars), minimum 24');
+          err.data[0].message.should.match(/String does not match pattern/);
         })
           .then(done, done);
 

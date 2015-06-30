@@ -13,7 +13,7 @@ var config = require('../../../config'),
   userCreate = require('./user-create');
 
 // Connect to database if not already connected from other tests
-if(mongoose.connection.readyState === 0) {
+if (mongoose.connection.readyState === 0) {
   mongodb.connect();
 }
 
@@ -35,7 +35,7 @@ describe('User', function () {
     });
 
     // Set up the test logger
-    beforeEach(function(done) {
+    beforeEach(function (done) {
       logger = {
         error: sinon.spy()
       };
@@ -97,7 +97,7 @@ describe('User', function () {
           // Create same user again
           return userCreate(logger, mongoose, newUser);
         })
-        .then(console.error, function(err) {
+        .then(console.error, function (err) {
 
           // test logging was done
           sinon.assert.calledOnce(logger.error);
@@ -110,11 +110,11 @@ describe('User', function () {
 
     });
 
-    it('should reject non valid user objects', function(done) {
-      userCreate(logger, mongoose, {}).catch(function(err) {
-        var errors = JSON.parse(err);
-        should.exist(errors.jsonSchemaErrors[0].path);
-        errors.jsonSchemaErrors[0].message.should.match(/missing\ required\ property/i);
+    it('should reject non valid user objects', function (done) {
+      userCreate(logger, mongoose, {}).catch(function (err) {
+        err.code.should.equal(400);
+        err.message.should.equal('validation_error');
+        err.data[0].message.should.match(/missing required property/i);
       })
         .then(done, done);
     });

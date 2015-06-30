@@ -44,7 +44,7 @@ function jsonValidation(schemas) {
    * @schemaName String The name of the schema to use for validation.
    * @returns Promise resolve with JSON string or rejected with a JSON.stringfy'd object
    */
-  return function(json, schemaName) {
+  return function (json, schemaName) {
 
     assert.equal(typeof (json), 'string', 'argument json must be a string');
 
@@ -67,7 +67,11 @@ function jsonValidation(schemas) {
       errors.forEach(function (error) {
         validationErrors.push({path: error.path, message: error.message});
       });
-      deferred.reject(JSON.stringify({jsonSchemaErrors: validationErrors}));
+      deferred.reject({
+        code: 400,
+        message: 'validation_error',
+        data: formatErrorMessages(validationErrors)
+      });
     }
 
     return deferred.promise;
@@ -83,7 +87,7 @@ function jsonValidation(schemas) {
 function formatErrorMessages(errors) {
 
   // errors must be an array
-  return errors.jsonSchemaErrors.map(function (error) {
+  return errors.map(function (error) {
     return {
       path: error.path.replace('#/', ''),
       message: error.message

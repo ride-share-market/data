@@ -72,7 +72,7 @@ describe('User', function () {
         err.code.should.equal(400);
         err.message.should.equal('validation_error');
         err.data[0].path.should.equal('id');
-        err.data[0].message.should.equal('String is too short (6 chars), minimum 24');
+        err.data[0].message.should.match(/String does not match pattern/);
       })
         .then(done, done);
 
@@ -80,7 +80,7 @@ describe('User', function () {
 
     it('should return user search results', function (done) {
 
-      user.findById(logger, mongoose, {id: '542ecc5738cd267f52ac2085'}).catch(function findByIdError(err) {
+      user.findById(logger, mongoose, {id: '542ecc5738cd267f52ac2085'}).catch(function (err) {
         err.code.should.equal(404);
         err.message.should.equal('not_found');
         err.data.should.equal('Account profile not found.');
