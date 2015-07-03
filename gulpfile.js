@@ -57,3 +57,13 @@
       cb(err);
     });
   });
+
+  gulp.task('test-ci', function (cb) {
+
+    exec('NODE_ENV=test-ci ./node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha ' +
+      '-x \'*spec.js\' --root app/ --dir test/coverage  -- \'app/**/*spec.js\'', function (err, stdout, stderr) {
+      console.log(stdout);
+      console.log(stderr);
+      cb(err);
+    });
+  });
