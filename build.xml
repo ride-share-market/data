@@ -72,6 +72,7 @@
     <target name="gulp-test" depends="copy-config">
         <exec executable="${node.path}/gulp" failonerror="true">
             <env key="PATH" path="${node.path}:${env.PATH}"/>
+            <env key="NODE_ENV" value="test-ci"/>
             <arg value="test"/>
         </exec>
     </target>
