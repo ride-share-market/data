@@ -1,6 +1,8 @@
-# Ride Share Market Data
+# Ride Share Market - Data
 
-This is a Node.js RabbitMQ RPC application.
+[Ride Share Market](https://ridesharemarket.com) - Free, accessible and open source Ride Sharing.
+
+This git repository is the Node.js RabbitMQ RPC application for [ridesharemarket.com](https://ridesharemarket.com).
 
 ## Overview
 
