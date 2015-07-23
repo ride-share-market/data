@@ -24,6 +24,10 @@ describe('User', function () {
       userProfile[1].facebook.url.should.equal(userProfileFixture.providers.facebook.link);
       userProfile[1].facebook.image.should.match(/graph\.facebook\.com\/[0-9]{4,}\/picture/);
 
+      userProfile[2].linkedin.displayName.should.equal(userProfileFixture.providers.linkedin.name);
+      userProfile[2].linkedin.url.should.equal(userProfileFixture.providers.linkedin.publicProfileUrl);
+      userProfile[2].linkedin.image.should.equal(userProfileFixture.providers.linkedin.pictureUrl);
+
     });
 
   });
