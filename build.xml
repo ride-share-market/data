@@ -7,7 +7,7 @@
 
     <property name="node.version" value="1.5.1"/>
 
-    <property name="node.src" value="/var/lib/jenkins/tmp"/>
+    <property name="node.src" value="/var/jenkins_home/tmp"/>
 
     <property name="node.path" value="${node.src}/iojs-v${node.version}-linux-x64/bin"/>
 
