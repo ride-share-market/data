@@ -79,8 +79,16 @@ The defaults and examples assume RabbitMQ and MongoDB are running in a virtual m
 
 ## Tests
 
+- Local Dev workstation
 - `gulp lint`
 - `gulp watch-lint`
+- CI server
+- `sudo docker exec -it rsm-jenkins bash`
+- `export PATH=$PATH:/var/jenkins_home/tmp/iojs-v1.5.1-linux-x64/bin`
+- `cd /var/jenkins_home/workspace/data/`
+- `./node_modules/mocha/bin/mocha --recursive app`
+
+
 - You may also send RPC message manually with `app/rpc/rpc-publisher-mongodb.js`
 - Example:
 - `RABBITMQ_URL="rsm:UPDATE-THIS-PASSWORD@192.168.33.10/rsm" node rpc-publisher-mongodb.js`
