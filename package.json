@@ -1,6 +1,6 @@
 {
   "name": "ride-share-market-data",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "ridesharemarket.com RPC Database Application",
   "main": "index.js",
   "private": true,
