@@ -3,7 +3,7 @@
     "rabbitmq": {
       "user": "rsm",
       "password": "UPDATE-THIS-PASSWORD",
-      "url": "lan.rmq01.prd.ams.ridesharemarket.com",
+      "url": "lan.rmq01.prd.aws.ridesharemarket.com",
       "vhost": "/rsm"
     },
     "queues": {
@@ -12,7 +12,7 @@
   },
   "database": {
     "mongodb": {
-      "uri": "mongodb://lan.mgo01.prd.ams.ridesharemarket.com",
+      "uri": "mongodb://lan.mgo01.prd.aws.ridesharemarket.com",
       "port": 27017,
       "dbname": "rsm"
     }
