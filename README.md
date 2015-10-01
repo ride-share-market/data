@@ -100,6 +100,9 @@ The defaults and examples assume RabbitMQ and MongoDB are running in a virtual m
 - `pm2 start config/pm2-loc.json`
 
 - VBX Env
-- `sudo docker run -d --restart always --name rsm-data --env 'NODE_ENV=vbx' --add-host lan.rmq01.prd.ams.ridesharemarket.com:192.168.33.10 --add-host lan.mgo01.prd.ams.ridesharemarket.com:192.168.33.10 --cap-add SYS_PTRACE --security-opt apparmor:unconfined ride-share-market/rsm-data:1.2.8`
+- `sudo docker run -d --restart always --name rsm-data --env 'NODE_ENV=vbx' --cap-add SYS_PTRACE --security-opt apparmor:unconfined ride-share-market/rsm-data:x.x.x`
+- OR
+- `cap vbx docker:deploy[data]` 
 
-- TODO
+- PRD Env
+- `cap prd docker:deploy[data]`

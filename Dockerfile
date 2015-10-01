@@ -1,7 +1,14 @@
-FROM ride-share-market/rsm-iojs:1.1.2
+FROM node:4.1.1
 MAINTAINER Ride Share Market "systemsadmin@ridesharemarket.com"
 
-# NPM package cache
+# APT cache (Updating APT_REFRESHED_AT will 'cache bust' and re-run apt command)
+ENV APT_REFRESHED_AT 2015-10-01.1
+RUN apt-get -yqq update && \
+    apt-get -y install sudo && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# NPM package cache (Updating package.json will 'cache bust' and run npm install during the build).
 COPY package.json /tmp/package.json
 RUN \
     cd /tmp && \
@@ -9,8 +16,8 @@ RUN \
     npm install -g pm2 && \
     npm cache clean
 
-# Application
-ENV APP_REFRESHED_AT 2015-06-17.1
+# Application (Updating the env var APP_REFRESHED_AT will 'cache bust' and copy in fresh versions of application code).
+ENV APP_REFRESHED_AT 2015-10-01.1
 ENV APP_DIR /srv/ride-share-market-data
 RUN \
     mkdir ${APP_DIR} && \
